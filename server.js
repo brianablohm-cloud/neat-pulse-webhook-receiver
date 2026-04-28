@@ -23,16 +23,12 @@ app.post('/webhook', async (req, res) => {
     const headerBlock = blocks.find(b => b.type === 'header');
     
     // Find device, room and location blocks
-    const deviceBlock = blocks.find(b => 
-      b.text && b.text.text && b.text.text.includes('Device:')
-    );
-    const roomBlock = blocks.find(b => 
-      b.text && b.text.text && b.text.text.includes('Room:')
-    );
-    const locationBlock = blocks.find(b => 
-      b.text && b.text.text && b.text.text.includes('Location:')
-    );
-
+   const deviceBlock = blocks.find(b =>
+  b.text && b.text.text && b.text.text.includes('*Device*:'));
+const roomBlock = blocks.find(b =>
+  b.text && b.text.text && b.text.text.includes('*Room*:'));
+const locationBlock = blocks.find(b =>
+  b.text && b.text.text && b.text.text.includes('*Location*:'));
     // Find the Pulse deep link button
     const actionsBlock = blocks.find(b => b.type === 'actions');
     const pulseUrl = actionsBlock?.elements?.[0]?.url || 'https://pulse.neat.no';
@@ -44,9 +40,9 @@ app.post('/webhook', async (req, res) => {
 
     // Build the clean values
     const header = headerBlock?.text?.text || 'Neat Device Event';
-    const device = deviceBlock?.text?.text?.replace('*Device*:\n ', '') || 'Unknown';
-    const room = roomBlock?.text?.text?.replace('*Room*:\n ', '') || 'Unknown';
-    const location = locationBlock?.text?.text?.replace('*Location*:\n ', '') || 'Unknown';
+   const device = deviceBlock?.text?.text?.replace('*Device*:\n ', '').trim() || 'Unknown';
+const room = roomBlock?.text?.text?.replace('*Room*:\n ', '').trim() || 'Unknown';
+const location = locationBlock?.text?.text?.replace('*Location*:\n ', '').trim() || 'Unknown';
     const status = statusText.replace('*Status*:\n ', '') || 'Unknown';
 
     // Build the Slack message with color bar
